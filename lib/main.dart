@@ -38,8 +38,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String timeString = "";
+
   @override
   Widget build(BuildContext context) {
+    Future<Time> time = fetchTime();
+    time.then((Time t) => setState((){
+      timeString = "${t.time} en ${t.country}";
+    }));
     return MaterialApp(
       title: 'Web services in flutter',
       theme: ThemeData(
@@ -50,7 +56,7 @@ class _MyAppState extends State<MyApp> {
           title: Text('Web services in flutter'),
         ),
         body: Center(
-          child: Text('Aqui va a ir la hora')
+          child: Text(timeString)
         ),
         floatingActionButton: FloatingActionButton(
           tooltip: 'Increment',
