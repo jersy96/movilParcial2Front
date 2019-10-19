@@ -4,18 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<Post> fetchPost() async {
-  final response =
-      await http.get('http://192.168.1.167:3000/users');
-
-  if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON.
-    return Post.fromJson(json.decode(response.body));
-  } else {
-    // If that call was not successful, throw an error.
-    throw Exception('Failed to load post');
-  }
-}
 
 class Post {
   final int userId;
@@ -46,6 +34,24 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Future<Post> post;
+  static var visible = true;
+
+
+  Future<Post> fetchPost() async {
+    final response =
+        await http.get('http://192.168.1.167:3000/users');
+
+    if (response.statusCode == 200) {
+      setState(() {
+        visible = false;
+      });
+      // If the call to the server was successful, parse the JSON.
+      return Post.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  }
 
   @override
   void initState() {
@@ -58,6 +64,9 @@ class _MyAppState extends State<MyApp> {
       post = fetchPost();
     });
   }
+
+  final loading = Visibility(child: CircularProgressIndicator(), visible: visible,);
+
  
   @override
   Widget build(BuildContext context) {
@@ -71,19 +80,21 @@ class _MyAppState extends State<MyApp> {
           title: Text('Fetch Data Example'),
         ),
         body: Center(
-          child: FutureBuilder<Post>(
-            future: post,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data.body);
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error} jajaja");
-              }
-
-              // By default, show a loading spinner.
-              return CircularProgressIndicator();
-            },
-          ),
+          child: Stack(
+            children: <Widget>[
+              loading,
+              FutureBuilder<Post>(
+                future: post,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(snapshot.data.body);
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error} jajaja");
+                  }
+                },
+              ),
+            ],  
+          )
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: fetchMyPost,
