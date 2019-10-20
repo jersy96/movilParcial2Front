@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'models/time.dart';
-import 'providers/time_api_provider.dart';
+import 'repositories/time_repository.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,10 +16,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Future<Time> time;
   String timeString = '';
-  TimeApiProvider _timeApiProvider = TimeApiProvider();
+  TimeRepository _timeRepository = TimeRepository();
 
   void updateTime(){
-    time = _timeApiProvider.fetchTime();
+    time = _timeRepository.fetchTimeFromServer();
     time.then((Time t) => setState((){
       timeString = "${t.time} en ${t.country}";
     }));
