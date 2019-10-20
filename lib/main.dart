@@ -1,19 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'models/time.dart';
-
-Future<Time> fetchTime() async {
-  final response =
-      await http.get('http://ec2-3-18-105-140.us-east-2.compute.amazonaws.com:3000//times');
-  if (response.statusCode == 200) {
-    return Time.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to load Time');
-  }
-}
+import 'providers/time_api_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,9 +16,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Future<Time> time;
   String timeString = '';
+  TimeApiProvider _timeApiProvider = TimeApiProvider();
 
   void updateTime(){
-    time = fetchTime();
+    time = _timeApiProvider.fetchTime();
     time.then((Time t) => setState((){
       timeString = "${t.time} en ${t.country}";
     }));
