@@ -41,6 +41,7 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                Text(timeString),
                 TextField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -75,9 +76,14 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
               ],
-            )
+            ),
 
-          )
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: updateTime,
+            tooltip: 'Increment',
+            child: Icon(Icons.add),
+          ),
         ),
       );
   }
