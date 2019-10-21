@@ -13,6 +13,7 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
+//Text(timeString)
 class _MyAppState extends State<MyApp> {
   Future<Time> time;
   String timeString = '';
@@ -37,14 +38,47 @@ class _MyAppState extends State<MyApp> {
           title: Text('Web services in flutter'),
         ),
         body: Center(
-          child: Text(timeString)
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Usuario',
+                  ),
+                ),
+                TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                  ),
+                ),
+                const SizedBox(height: 30),
+                RaisedButton(
+                  onPressed: () {},
+                  textColor: Colors.white,
+                  padding: const EdgeInsets.all(0.0),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          Color(0xFF0D47A1),
+                          Color(0xFF1976D2),
+                          Color(0xFF42A5F5),
+                        ],
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(10.0),
+                    child:
+                    const Text('Login', style: TextStyle(fontSize: 20)),
+                  ),
+                ),
+              ],
+            )
+
+          )
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: updateTime,
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
-        ),
-      ),
-    );
+      );
   }
 }
