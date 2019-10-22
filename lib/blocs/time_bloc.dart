@@ -12,6 +12,10 @@ class TimeBloc {
     _timeController.sink.add(response);
   }
 
+  void cleanStream(){
+    _timeController.sink.add(null);
+  }
+
   void dispose() {
     _timeController.close();
   }

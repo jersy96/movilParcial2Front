@@ -19,6 +19,7 @@ class _TimeWidgetState extends State<TimeWidget> {
   }
 
   void updateTime(){
+    timeBloc.cleanStream();
     timeBloc.fetchTimeFromServer();
   }
 
