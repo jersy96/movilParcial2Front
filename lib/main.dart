@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ui/time_widget.dart';
+import 'ui/login_widget.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,16 +9,18 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
-
+//Text(timeString)
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Web services in flutter',
-      theme: ThemeData(
+    return new MaterialApp(
+      title: 'Flutter Demo',
+      theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: TimeWidget()
+      home: LoginWidget(
+        title: 'My Home Page'
+      )
     );
   }
 }
