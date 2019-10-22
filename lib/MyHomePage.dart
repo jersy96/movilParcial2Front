@@ -1,35 +1,46 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:helloflutter/MySecondPage.dart';
-import 'package:helloflutter/models/time.dart';
-import 'package:helloflutter/repositories/time_repository.dart';
+import 'package:http/http.dart' as http;
 import 'package:helloflutter/widgets/button_green.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({
     Key key,
-    this.title,
-    this.counter,
-    this.decrementCounter,
-    this.incrementCounter
+    this.title
   }) : super(key: key);
   final String title;
-  final int counter;
-  final ValueChanged<void> decrementCounter;
-  final ValueChanged<void> incrementCounter;
   @override
   _MyHomePageState createState() => new _MyHomePageState();
 }
-class _MyHomePageState extends State<MyHomePage> {
-  Future<Time> time;
-  String timeString = '';
-  TimeRepository _timeRepository = TimeRepository();
 
-  void updateTime(){
-    time = _timeRepository.fetchTimeFromServer();
-    time.then((Time t) => setState((){
-      timeString = "${t.time} en ${t.country}";
-    }));
+class _MyHomePageState extends State<MyHomePage> {
+
+  TextEditingController usernameController = new TextEditingController();
+  TextEditingController pwdController = new TextEditingController();
+  dynamic token = "";
+  void login() async {
+    var username = usernameController.text;
+    var pwd = pwdController.text;
+    final response = await http.get('http://ec2-3-18-105-140.us-east-2.compute.amazonaws.com:3000/times');
+    setState((){
+      token = json.decode(response.body);
+    });
   }
+
+  void storeValue() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', 'token');
+  }
+
+  void getValueStored() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState((){
+//      timeString = prefs.getString('token');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -45,14 +56,16 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(timeString),
+              Text(token),
               TextField(
+                controller: usernameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Usuario',
                 ),
               ),
               TextField(
+                controller: pwdController,
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -60,21 +73,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               ButtonGreen(
-                onPressed: () {
+                onPressed: login,
+                    /*() {
                   Navigator.pushReplacementNamed(context, "/logout", arguments: ScreenArguments('Logged'));
-                },
-                text: 'Ingresar',
+                },*/
+                text: 'Sign In',
                 width: 100,
                 height: 50,
               )
             ],
           ),
 
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: updateTime,
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
         ),
       ),
     );
